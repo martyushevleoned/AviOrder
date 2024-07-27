@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="ru">
+<head>
+    <title>Order Page</title>
+    <link th:href="@{/css/order.css}" rel="stylesheet" />
+</head>
+<body>
+<input th:value="${orderDto.orderId}" id="orderId" type="hidden"/>
+<header>
+    <h4>Идентификатор заказа: <span th:text="${orderDto.orderId}"></span></h4>
+</header>
+<div class="wrapper">
+    <table>
+        <tr>
+            <td><span>ссылка на объявление</span></td>
+            <td><span>количество пф в день</span></td>
+            <td><span>дата начала</span></td>
+            <td><span>дата конца</span></td>
+            <td><span>стоимость в день</span></td>
+            <td><span>стоимость за период продвижения</span></td>
+            <td><span>накручивать контакты</span></td>
+        </tr>
+        <tr th:each="advertisement : ${orderDto.advertisementDtoList}" class="advertisement">
+            <td><label><input type="text" th:value="${advertisement.link}" placeholder="ссылка" readonly></label></td>
+            <td><label><input type="number" th:value="${advertisement.pfCount}" readonly></label></td>
+            <td><label><input type="date" th:value="${advertisement.startDate}" readonly></label></td>
+            <td><label><input type="date" th:value="${advertisement.endDate}" readonly></label></td>
+            <td><label><input type="number" readonly></label></td>
+            <td><label><input type="number" readonly></label></td>
+            <td><label><input type="checkbox" th:checked="${advertisement.enableContact}" onclick="return false;"></label></td>
+        </tr>
+    </table>
+</div>
+<footer>
+    <div><a th:href="@{/order/download/{id}(id=${orderDto.orderId})}"><button>Скачать Excel</button></a></div>
+    <div><span>Итоговая стоимость: </span><label><input class="summary" type="number" value="0" readonly></label></div>
+</footer>
+</body>
+</html>
+<script>
+    // === table params ===
+    // getters
+    function getAdvertisements() {
+        return document.querySelectorAll("tr.advertisement");
+    }
+    // setters
+    function setSummaryValue(value) {
+        document.querySelector("input.summary").value = value;
+    }
+    // === advertisement params ===
+    // getters elements
+    function getPfCount(advertisement) {
+        return advertisement.children[1].children[0].children[0];
+    }
+    function getStartDate(advertisement) {
+        return advertisement.children[2].children[0].children[0];
+    }
+    function getEndDate(advertisement) {
+        return advertisement.children[3].children[0].children[0];
+    }
+    // getters value
+    function getPfCountValue(advertisement) {
+        return getPfCount(advertisement).value;
+    }
+    function getStartDateValue(advertisement) {
+        return getStartDate(advertisement).value;
+    }
+    function getEndDateValue(advertisement) {
+        return getEndDate(advertisement).value;
+    }
+    // setters
+    function setCostPerDayValue(advertisement, value) {
+        return advertisement.children[4].children[0].children[0].value = value;
+    }
+    function setCostPerPeriodValue(advertisement, value) {
+        return advertisement.children[5].children[0].children[0].value = value;
+    }
+    // functions
+    function getCountOfDays(advertisement) {
+        return Math.round((new Date(getEndDateValue(advertisement)).getTime() - new Date(getStartDateValue(advertisement))) / (1000 * 60 * 60 * 24)) + 1;
+    }
+    function getCurrentDate() {
+        return new Date().toLocaleDateString('en-CA');
+    }
+</script>
+<script>
+    // Обновляет значения автоопределяемых полей
+    function updateCosts() {
+        var sumPerPeriod = 0;
+        getAdvertisements().forEach(advertisement => {
+            var countOfDays = getCountOfDays(advertisement);
+            var pfCount = getPfCountValue(advertisement);
+
+            setCostPerDayValue(advertisement, pfCount * 4);
+            setCostPerPeriodValue(advertisement, pfCount * 4 * countOfDays);
+            sumPerPeriod += Number(pfCount * 4 * countOfDays);
+        });
+        setSummaryValue(sumPerPeriod);
+    }
+    updateCosts();
+</script>
