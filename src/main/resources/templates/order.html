@@ -1,9 +1,24 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" lang="ru">
 <head>
     <title>Order Page</title>
+    <link rel="stylesheet" href="../static/css/styles.css"/>
 </head>
 <body>
 <input th:value="${id}" id="orderId" type="hidden"/>
 <div><span>order id: </span><span th:text="${id}"></span></div>
+<form action="">
+    <div>
+        <div><span>link 1</span></div>
+        <div><label><input placeholder="ссылка" type="text" required></label></div>
+        <div><label><input placeholder="количество ПФ" type="number" required></label></div>
+        <div><label><input placeholder="начало" type="date" required></label></div>
+        <div><label><input placeholder="окончание" type="date" required></label></div>
+        <div><label><input placeholder="стоимость в день" type="number" value="0" readonly></label></div>
+        <div><label><input placeholder="стоимость за промежуток" type="number" value="0" readonly></label></div>
+        <div><button>убрать объявление</button></div>
+    </div>
+    <div><button>добавить объявление</button></div>
+    <div><button type="submit">сохранить</button></div>
+</form>
 </body>
 </html>

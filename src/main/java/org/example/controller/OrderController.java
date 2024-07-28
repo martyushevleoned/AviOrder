@@ -17,13 +17,17 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/")
-    public String root() {
-        return "redirect:/order/" + orderService.generateOrderId();
+    @GetMapping("/order")
+    public String order() {
+        return "redirect:/order/" + orderService.generateOrder();
     }
 
     @GetMapping("/order/{id}")
-    public String order(@PathVariable long id, Model model) {
+    public String orderId(@PathVariable long id, Model model) {
+
+        if (!orderService.isExist(id))
+            return "orderNotFound";
+
         model.addAttribute("id", id);
         return "order";
     }
