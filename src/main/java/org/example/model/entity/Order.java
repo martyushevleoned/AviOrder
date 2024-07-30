@@ -1,10 +1,10 @@
 package org.example.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "orders")
 public class Order {
@@ -14,6 +14,10 @@ public class Order {
 
     @Column(nullable = false)
     private Instant recentView = Instant.now();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id")
+    private List<Link> links = new ArrayList<>();
 
     public Order() {
     }
@@ -32,5 +36,13 @@ public class Order {
 
     public void setRecentView(Instant recentView) {
         this.recentView = recentView;
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
     }
 }

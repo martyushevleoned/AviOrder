@@ -1,24 +1,93 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" lang="ru">
 <head>
     <title>Order Page</title>
-    <link rel="stylesheet" href="../static/css/styles.css"/>
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+    <link th:href="@{/css/order.css}" rel="stylesheet" />
 </head>
 <body>
 <input th:value="${id}" id="orderId" type="hidden"/>
+<input th:value="${links}" id="links" type="hidden"/>
 <div><span>order id: </span><span th:text="${id}"></span></div>
-<form action="">
-    <div>
-        <div><span>link 1</span></div>
-        <div><label><input placeholder="ссылка" type="text" required></label></div>
-        <div><label><input placeholder="количество ПФ" type="number" required></label></div>
-        <div><label><input placeholder="начало" type="date" required></label></div>
-        <div><label><input placeholder="окончание" type="date" required></label></div>
-        <div><label><input placeholder="стоимость в день" type="number" value="0" readonly></label></div>
-        <div><label><input placeholder="стоимость за промежуток" type="number" value="0" readonly></label></div>
-        <div><button>убрать объявление</button></div>
-    </div>
+<table>
+    <tr>
+        <td><span>ссылка на объявление</span></td>
+        <td><span>количество пф в день</span></td>
+        <td><span>дата начала</span></td>
+        <td><span>дата конца</span></td>
+        <td><span>стоимость в день</span></td>
+        <td><span>стоимость за промежуток</span></td>
+        <td><span>убрать объявление</span></td>
+    </tr>
+    <tr th:each="link : ${links}" class="link">
+        <td><label><input placeholder="ссылка" type="text" th:value="${link.link}" required></label></td>
+        <td><label><input type="number" th:value="${link.pfCount}" required></label></td>
+        <td><label><input type="date" th:value="${link.startDate}" required></label></td>
+        <td><label><input type="date" th:value="${link.endDate}" required></label></td>
+        <td><label><input type="number" readonly></label></td>
+        <td><label><input type="number" readonly></label></td>
+        <td><button>убрать объявление</button></td>
+    </tr>
+    <tr class="summary">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><span>итого</span></td>
+        <td><label><input type="number" value="0" readonly></label></td>
+        <td><label><input type="number" value="0" readonly></label></td>
+        <td></td>
+    </tr>
+</table>
+<div>
     <div><button>добавить объявление</button></div>
-    <div><button type="submit">сохранить</button></div>
-</form>
+    <div><button>сохранить</button></div>
+</div>
 </body>
+<script>
+    function dateDiff(first, second) {
+        return Math.round((new Date(second).getTime() - new Date(first).getTime()) / (1000 * 60 * 60 * 24) + 1);
+    }
+
+    function updateCosts (){
+        var links = document.querySelectorAll("tr.link");
+        var sumPerDay = 0;
+        var sumPerPeriod = 0;
+
+        links.forEach(link => {
+            var pfCount = link.children[1].children[0].children[0];
+            var startDate = link.children[2].children[0].children[0];
+            var endDate = link.children[3].children[0].children[0];
+            var costPerDay = link.children[4].children[0].children[0];
+            var costPerPeriod = link.children[5].children[0].children[0];
+
+            costPerDay.value = pfCount.value * 4;
+            costPerPeriod.value = dateDiff(startDate.value, endDate.value) * costPerDay.value;
+
+            sumPerDay += Number(costPerDay.value);
+            sumPerPeriod += Number(costPerPeriod.value);
+        });
+
+        var summary = document.querySelector("tr.summary");
+        var costPerDay = summary.children[4].children[0].children[0];
+        var costPerPeriod = summary.children[5].children[0].children[0];
+
+        costPerDay.value = sumPerDay;
+        costPerPeriod.value = sumPerPeriod;
+    }
+
+    function setUpdateListeners(){
+        var links = document.querySelectorAll("tr.link");
+        links.forEach(link => {
+            var pfCount = link.children[1].children[0].children[0];
+            var startDate = link.children[2].children[0].children[0];
+            var endDate = link.children[3].children[0].children[0];
+
+            pfCount.addEventListener("change", updateCosts);
+            startDate.addEventListener("change", updateCosts);
+            endDate.addEventListener("change", updateCosts);
+        });
+    }
+
+    updateCosts();
+    setUpdateListeners();
+</script>
 </html>

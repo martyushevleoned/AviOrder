@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.model.dto.OrderDto;
 import org.example.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,10 @@ public class OrderController {
         if (!orderService.isExist(id))
             return "orderNotFound";
 
-        model.addAttribute("id", id);
+        OrderDto orderDto = orderService.getOrderDto(id);
+        model.addAttribute("id", orderDto.orderId());
+        model.addAttribute("links", orderDto.linkDtoList());
+
         return "order";
     }
 }

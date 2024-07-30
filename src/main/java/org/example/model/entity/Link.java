@@ -2,7 +2,7 @@ package org.example.model.entity;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity(name = "links")
 public class Link {
@@ -19,13 +19,13 @@ public class Link {
     private String link;
 
     @Column(nullable = false)
-    private Integer PFCount;
+    private Integer pfCount;
 
-    @Column(nullable = false)
-    private Date startDate;
+    @Column(nullable = false, columnDefinition = "DATE")
+    private LocalDate startDate;
 
-    @Column(nullable = false)
-    private Date endDate;
+    @Column(nullable = false, columnDefinition = "DATE")
+    private LocalDate endDate;
 
     public Link() {
     }
@@ -54,27 +54,27 @@ public class Link {
         this.link = link;
     }
 
-    public Integer getPFCount() {
-        return PFCount;
+    public Integer getPfCount() {
+        return pfCount;
     }
 
-    public void setPFCount(Integer PFCount) {
-        this.PFCount = PFCount;
+    public void setPfCount(Integer pfCount) {
+        this.pfCount = pfCount;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 }
