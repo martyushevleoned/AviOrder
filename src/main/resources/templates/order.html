@@ -38,15 +38,17 @@
     </tr>
 </table>
 <div>
-    <div><button>добавить объявление</button></div>
+    <div><button class="addLink">добавить объявление</button></div>
     <div><button>сохранить</button></div>
 </div>
 </body>
 <script>
+    // Возвращает количество дней между first и second включая оба дня
     function dateDiff(first, second) {
         return Math.round((new Date(second).getTime() - new Date(first).getTime()) / (1000 * 60 * 60 * 24) + 1);
     }
 
+    // Обновляет значения автоопределяемых полей
     function updateCosts (){
         var links = document.querySelectorAll("tr.link");
         var sumPerDay = 0;
@@ -74,20 +76,54 @@
         costPerPeriod.value = sumPerPeriod;
     }
 
-    function setUpdateListeners(){
+    // устанавливает листенеры изменения количества ПФ, дат и кнопок удаления
+    function setTableUpdateListeners() {
         var links = document.querySelectorAll("tr.link");
         links.forEach(link => {
             var pfCount = link.children[1].children[0].children[0];
             var startDate = link.children[2].children[0].children[0];
             var endDate = link.children[3].children[0].children[0];
+            var button = link.children[6].children[0];
 
             pfCount.addEventListener("change", updateCosts);
             startDate.addEventListener("change", updateCosts);
             endDate.addEventListener("change", updateCosts);
+
+            button.addEventListener('click', function (event) {
+                link.remove();
+                updateCosts();
+            });
+        });
+    }
+
+    // устанавливает листенер добавления ссылки
+    function setButtonsUpdateListeners() {
+        const button = document.querySelector('button.addLink');
+        button.addEventListener('click', function (event) {
+
+            var table = document.querySelector("tbody");
+            var summary = document.querySelector("tr.summary");
+
+            var currentDate = new Date().toLocaleDateString('en-CA');
+            var tr = document.createElement('tr');
+            tr.className = "link";
+            tr.innerHTML = `
+                    <td><label><input placeholder="ссылка" type="text" value="" required></label></td>
+                    <td><label><input type="number" value="1" required></label></td>
+                    <td><label><input type="date" value="${currentDate}" required></label></td>
+                    <td><label><input type="date" value="${currentDate}" required></label></td>
+                    <td><label><input type="number" readonly></label></td>
+                    <td><label><input type="number" readonly></label></td>
+                    <td><button>убрать объявление</button></td>
+                `;
+            table.insertBefore(tr, summary);
+            updateCosts();
+            setTableUpdateListeners();
         });
     }
 
     updateCosts();
-    setUpdateListeners();
+    setTableUpdateListeners();
+    setButtonsUpdateListeners();
 </script>
 </html>
