@@ -32,10 +32,10 @@ public class OrderService {
      */
     public long generateOrder() {
 
-        long uuid = UUID.randomUUID().getLeastSignificantBits();
-
-        while (orderRepository.existsById(uuid))
-            uuid = UUID.randomUUID().getLeastSignificantBits();
+        long uuid;
+        do {
+            uuid = UUID.randomUUID().getLeastSignificantBits() & Long.MAX_VALUE;
+        } while (orderRepository.existsById(uuid));
 
         Order order = new Order();
         order.setId(uuid);
@@ -48,26 +48,17 @@ public class OrderService {
         return orderRepository.existsById(orderId);
     }
 
-    public OrderDto getOrderDto(long orderId) {
-
-        if (!orderRepository.existsById(orderId))
-            throw new RuntimeException("заказ не существует");
-
-        Order order = orderRepository.getReferenceById(orderId);
-        List<LinkDto> linkDtoList = order.getLinks().stream().map(link ->
+    public List<LinkDto> getLinksByOrderId(long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("заказ не существует"));
+        return order.getLinks().stream().map(link ->
                 new LinkDto(link.getLink(), link.getPfCount(), link.getStartDate(), link.getEndDate())
         ).toList();
-
-        return new OrderDto(orderId, linkDtoList);
     }
 
     @Transactional
     public void save(OrderDto orderDto) {
 
-        if (!orderRepository.existsById(orderDto.orderId()))
-            throw new RuntimeException("заказ не существует");
-
-        Order order = orderRepository.getReferenceById(orderDto.orderId());
+        Order order = orderRepository.findById(orderDto.orderId()).orElseThrow(() -> new RuntimeException("заказ не существует"));
         linkRepository.deleteAll(order.getLinks());
 
         List<Link> newLinks = orderDto.linkDtoList().stream().map(linkDto -> {
