@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" lang="ru">
 <head>
     <title>Order Page</title>
@@ -39,9 +40,10 @@
 </table>
 <div>
     <div><button class="addLink">добавить объявление</button></div>
-    <div><button>сохранить</button></div>
+    <div><button class="save">сохранить</button></div>
 </div>
 </body>
+</html>
 <script>
     // Возвращает количество дней между first и second включая оба дня
     function dateDiff(first, second) {
@@ -122,8 +124,41 @@
         });
     }
 
+    // устанавливает листенер добавления ссылки
+    function initSaveButton() {
+        const button = document.querySelector('button.save');
+        button.addEventListener('click', function (event) {
+
+            var body = {
+                orderId: document.getElementById('orderId').value,
+                linkDtoList: []
+            };
+
+            var links = document.querySelectorAll("tr.link");
+            links.forEach(link => {
+                var advertisment = link.children[0].children[0].children[0];
+                var pfCount = link.children[1].children[0].children[0];
+                var startDate = link.children[2].children[0].children[0];
+                var endDate = link.children[3].children[0].children[0];
+
+                body.linkDtoList.push({
+                    link: advertisment.value,
+                    pfCount: pfCount.value,
+                    startDate: startDate.value,
+                    endDate: endDate.value
+                });
+            });
+
+            fetch("http://localhost:8080/order/save", {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            })
+        });
+    }
+
+    initSaveButton();
     updateCosts();
     setTableUpdateListeners();
     setButtonsUpdateListeners();
 </script>
-</html>

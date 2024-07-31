@@ -8,11 +8,10 @@ import java.time.LocalDate;
 public class Link {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "order_id")
     private Order order;
 
     @Column(nullable = false)

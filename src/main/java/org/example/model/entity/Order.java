@@ -15,8 +15,7 @@ public class Order {
     @Column(nullable = false)
     private Instant recentView = Instant.now();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_id")
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     private List<Link> links = new ArrayList<>();
 
     public Order() {
