@@ -19,18 +19,24 @@ public class OrderController {
 
     @GetMapping("/order")
     public String order() {
-        return "redirect:/order/" + orderService.generateOrder();
+        return "redirect:/order/edit/" + orderService.generateOrder();
     }
 
-    @GetMapping("/order/{id}")
-    public String orderId(@PathVariable long id, Model model) {
-
+    @GetMapping("/order/edit/{id}")
+    public String editOrderId(@PathVariable long id, Model model) {
         if (!orderService.isExist(id))
             return "orderNotFound";
-
         model.addAttribute("id", id);
         model.addAttribute("links", orderService.getLinksByOrderId(id));
+        return "editOrder";
+    }
 
-        return "order";
+    @GetMapping("/order/view/{id}")
+    public String viewOrderId(@PathVariable long id, Model model) {
+        if (!orderService.isExist(id))
+            return "orderNotFound";
+        model.addAttribute("id", id);
+        model.addAttribute("links", orderService.getLinksByOrderId(id));
+        return "viewOrder";
     }
 }

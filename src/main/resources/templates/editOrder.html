@@ -18,7 +18,7 @@
             <td><span>дата начала</span></td>
             <td><span>дата конца</span></td>
             <td><span>стоимость в день</span></td>
-            <td><span>стоимость за промежуток</span></td>
+            <td><span>стоимость за период продвижения</span></td>
             <td><span>убрать объявление</span></td>
         </tr>
         <tr th:each="link : ${links}" class="link">
@@ -35,13 +35,14 @@
 <footer>
     <div><button class="addLink">добавить объявление</button></div>
     <div><button class="save">сохранить</button></div>
+    <div><a th:href="@{/order/view/{id}(id=${id})}"><button>Страница просмотра</button></a></div>
     <div><span>Итоговая стоимость: </span><label><input class="summary" type="number" value="0" readonly></label></div>
 </footer>
 </body>
 </html>
 <script>
     // Обновляет значения автоопределяемых полей
-    function updateCosts (){
+    function updateCosts() {
         var links = document.querySelectorAll("tr.link");
         var sumPerPeriod = 0;
 

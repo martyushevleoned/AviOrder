@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="ru">
+<head>
+    <title>Order Page</title>
+    <link th:href="@{/css/order.css}" rel="stylesheet" />
+</head>
+<body>
+<header>
+    <div><span>Идентификатор заказа: </span><span th:text="${id}"></span></div>
+</header>
+<div class="wrapper">
+    <table>
+        <tr>
+            <td><span>ссылка на объявление</span></td>
+            <td><span>количество пф в день</span></td>
+            <td><span>дата начала</span></td>
+            <td><span>дата конца</span></td>
+            <td><span>стоимость в день</span></td>
+            <td><span>стоимость за период продвижения</span></td>
+        </tr>
+        <tr th:each="link : ${links}" class="link">
+            <td><label><input type="text" th:value="${link.link}" placeholder="ссылка" readonly></label></td>
+            <td><label><input type="number" th:value="${link.pfCount}" readonly></label></td>
+            <td><label><input type="date" th:value="${link.startDate}" readonly></label></td>
+            <td><label><input type="date" th:value="${link.endDate}" readonly></label></td>
+            <td><label><input type="number" readonly></label></td>
+            <td><label><input type="number" readonly></label></td>
+        </tr>
+    </table>
+</div>
+<footer>
+    <div><span>Итоговая стоимость: </span><label><input class="summary" type="number" value="0" readonly></label></div>
+</footer>
+</body>
+</html>
+<script>
+    // Обновляет значения автоопределяемых полей
+    function updateCosts() {
+        var links = document.querySelectorAll("tr.link");
+        var sumPerPeriod = 0;
+
+        links.forEach(link => {
+            var pfCount = link.children[1].children[0].children[0];
+            var startDate = link.children[2].children[0].children[0];
+            var endDate = link.children[3].children[0].children[0];
+            var costPerDay = link.children[4].children[0].children[0];
+            var costPerPeriod = link.children[5].children[0].children[0];
+
+            var countOfDays = Math.round((new Date(endDate.value).getTime() - new Date(startDate.value).getTime()) / (1000 * 60 * 60 * 24) + 1);
+            costPerDay.value = pfCount.value * 4;
+            costPerPeriod.value = costPerDay.value * countOfDays;
+
+            sumPerPeriod += Number(costPerPeriod.value);
+        });
+        document.querySelector("input.summary").value = sumPerPeriod;
+    }
+
+    updateCosts();
+</script>
