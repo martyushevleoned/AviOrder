@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity(name = "links")
-public class Link {
+public class Advertisement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Link {
     @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate endDate;
 
-    public Link() {
+    public Advertisement() {
     }
 
     public Long getId() {

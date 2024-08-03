@@ -1,15 +1,23 @@
 package org.example.service;
 
-import org.example.model.dto.LinkDto;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.example.model.dto.AdvertisementDto;
 import org.example.model.dto.OrderDto;
-import org.example.model.entity.Link;
+import org.example.model.entity.Advertisement;
 import org.example.model.entity.Order;
-import org.example.model.repository.LinkRepository;
+import org.example.model.repository.AdvertisementRepository;
 import org.example.model.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,12 +25,12 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final LinkRepository linkRepository;
+    private final AdvertisementRepository advertisementRepository;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, LinkRepository linkRepository) {
+    public OrderService(OrderRepository orderRepository, AdvertisementRepository advertisementRepository) {
         this.orderRepository = orderRepository;
-        this.linkRepository = linkRepository;
+        this.advertisementRepository = advertisementRepository;
     }
 
     /**
@@ -48,10 +56,10 @@ public class OrderService {
         return orderRepository.existsById(orderId);
     }
 
-    public List<LinkDto> getLinksByOrderId(long orderId) {
+    public List<AdvertisementDto> getLinksByOrderId(long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("заказ не существует"));
-        return order.getLinks().stream().map(link ->
-                new LinkDto(link.getLink(), link.getPfCount(), link.getStartDate(), link.getEndDate())
+        return order.getAdvertisements().stream().map(advertisement ->
+                new AdvertisementDto(advertisement.getLink(), advertisement.getPfCount(), advertisement.getStartDate(), advertisement.getEndDate())
         ).toList();
     }
 
@@ -59,17 +67,59 @@ public class OrderService {
     public void save(OrderDto orderDto) {
 
         Order order = orderRepository.findById(orderDto.orderId()).orElseThrow(() -> new RuntimeException("заказ не существует"));
-        linkRepository.deleteAll(order.getLinks());
+        advertisementRepository.deleteAll(order.getAdvertisements());
 
-        List<Link> newLinks = orderDto.linkDtoList().stream().map(linkDto -> {
-            Link link = new Link();
-            link.setOrder(order);
-            link.setLink(linkDto.link());
-            link.setPfCount(linkDto.pfCount());
-            link.setStartDate(linkDto.startDate());
-            link.setEndDate(linkDto.endDate());
-            return link;
+        List<Advertisement> newAdvertisements = orderDto.advertisementDtoList().stream().map(advertisementDto -> {
+            Advertisement advertisement = new Advertisement();
+            advertisement.setOrder(order);
+            advertisement.setLink(advertisementDto.link());
+            advertisement.setPfCount(advertisementDto.pfCount());
+            advertisement.setStartDate(advertisementDto.startDate());
+            advertisement.setEndDate(advertisementDto.endDate());
+            return advertisement;
         }).toList();
-        linkRepository.saveAll(newLinks);
+        advertisementRepository.saveAll(newAdvertisements);
+    }
+
+    public Resource generateOrderExcelDocument(long orderId) {
+
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("заказ не существует"));
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("" + orderId);
+
+        final int[] index = {0};
+        order.getAdvertisements().forEach(advertisement -> {
+            Row row = sheet.createRow(index[0]);
+
+            Cell link = row.createCell(0);
+            Cell pfCount = row.createCell(1);
+            Cell startDate = row.createCell(2);
+            Cell endDate = row.createCell(3);
+            Cell costPerDay = row.createCell(4);
+            Cell costPerPeriod = row.createCell(5);
+            Cell contacts = row.createCell(6);
+
+            link.setCellValue(advertisement.getLink());
+            pfCount.setCellValue(advertisement.getPfCount());
+            startDate.setCellValue(advertisement.getStartDate());
+            endDate.setCellValue(advertisement.getEndDate());
+
+            index[0]++;
+        });
+
+        try {
+            File file = new File("order.xlsx");
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            workbook.write(fileOutputStream);
+            workbook.close();
+
+            fileOutputStream.close();
+            return new FileSystemResource(file);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

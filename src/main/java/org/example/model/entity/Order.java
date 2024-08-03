@@ -16,7 +16,7 @@ public class Order {
     private Instant recentView = Instant.now();
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
-    private List<Link> links = new ArrayList<>();
+    private List<Advertisement> advertisements = new ArrayList<>();
 
     public Order() {
     }
@@ -37,11 +37,7 @@ public class Order {
         this.recentView = recentView;
     }
 
-    public List<Link> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<Link> links) {
-        this.links = links;
+    public List<Advertisement> getAdvertisements() {
+        return advertisements;
     }
 }

@@ -1,11 +1,12 @@
 package org.example.controller;
 
+import org.example.model.dto.OrderDto;
 import org.example.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class OrderController {
@@ -38,5 +39,12 @@ public class OrderController {
         model.addAttribute("id", id);
         model.addAttribute("links", orderService.getLinksByOrderId(id));
         return "viewOrder";
+    }
+
+    @PutMapping("/order/save")
+    @ResponseBody
+    public ResponseEntity<?> saveOrder(@RequestBody OrderDto orderDto) {
+        orderService.save(orderDto);
+        return ResponseEntity.ok("data saved");
     }
 }
