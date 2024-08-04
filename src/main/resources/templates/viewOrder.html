@@ -3,8 +3,10 @@
 <head>
     <title>Order Page</title>
     <link th:href="@{/css/order.css}" rel="stylesheet" />
+    <script type="text/javascript" th:src="@{/js/script.js}"></script>
 </head>
 <body>
+<input th:value="${orderDto.orderId}" id="orderId" type="hidden"/>
 <header>
     <div><span>Идентификатор заказа: </span><span th:text="${id}"></span></div>
 </header>
@@ -17,14 +19,16 @@
             <td><span>дата конца</span></td>
             <td><span>стоимость в день</span></td>
             <td><span>стоимость за период продвижения</span></td>
+            <td><span>накручивать контакты</span></td>
         </tr>
-        <tr th:each="link : ${links}" class="link">
-            <td><label><input type="text" th:value="${link.link}" placeholder="ссылка" readonly></label></td>
-            <td><label><input type="number" th:value="${link.pfCount}" readonly></label></td>
-            <td><label><input type="date" th:value="${link.startDate}" readonly></label></td>
-            <td><label><input type="date" th:value="${link.endDate}" readonly></label></td>
+        <tr th:each="advertisement : ${orderDto.advertisementDtoList}" class="advertisement">
+            <td><label><input type="text" th:value="${advertisement.link}" placeholder="ссылка"></label></td>
+            <td><label><input type="number" th:value="${advertisement.pfCount}"></label></td>
+            <td><label><input type="date" th:value="${advertisement.startDate}"></label></td>
+            <td><label><input type="date" th:value="${advertisement.endDate}"></label></td>
             <td><label><input type="number" readonly></label></td>
             <td><label><input type="number" readonly></label></td>
+            <td><label><input type="checkbox" th:checked="${advertisement.enableContact}"></label></td>
         </tr>
     </table>
 </div>
@@ -34,26 +38,64 @@
 </body>
 </html>
 <script>
+    // === table params ===
+    // getters
+    function getAdvertisements() {
+        return document.querySelectorAll("tr.advertisement");
+    }
+    // setters
+    function setSummaryValue(value) {
+        document.querySelector("input.summary").value = value;
+    }
+    // === advertisement params ===
+    // getters elements
+    function getPfCount(advertisement) {
+        return advertisement.children[1].children[0].children[0];
+    }
+    function getStartDate(advertisement) {
+        return advertisement.children[2].children[0].children[0];
+    }
+    function getEndDate(advertisement) {
+        return advertisement.children[3].children[0].children[0];
+    }
+    // getters value
+    function getPfCountValue(advertisement) {
+        return getPfCount(advertisement).value;
+    }
+    function getStartDateValue(advertisement) {
+        return getStartDate(advertisement).value;
+    }
+    function getEndDateValue(advertisement) {
+        return getEndDate(advertisement).value;
+    }
+    // setters
+    function setCostPerDayValue(advertisement, value) {
+        return advertisement.children[4].children[0].children[0].value = value;
+    }
+    function setCostPerPeriodValue(advertisement, value) {
+        return advertisement.children[5].children[0].children[0].value = value;
+    }
+    // functions
+    function getCountOfDays(advertisement) {
+        return Math.round((new Date(getEndDateValue(advertisement)).getTime() - new Date(getStartDateValue(advertisement))) / (1000 * 60 * 60 * 24)) + 1;
+    }
+    function getCurrentDate() {
+        return new Date().toLocaleDateString('en-CA');
+    }
+</script>
+<script>
     // Обновляет значения автоопределяемых полей
     function updateCosts() {
-        var links = document.querySelectorAll("tr.link");
         var sumPerPeriod = 0;
+        getAdvertisements().forEach(advertisement => {
+            var countOfDays = getCountOfDays(advertisement);
+            var pfCount = getPfCountValue(advertisement);
 
-        links.forEach(link => {
-            var pfCount = link.children[1].children[0].children[0];
-            var startDate = link.children[2].children[0].children[0];
-            var endDate = link.children[3].children[0].children[0];
-            var costPerDay = link.children[4].children[0].children[0];
-            var costPerPeriod = link.children[5].children[0].children[0];
-
-            var countOfDays = Math.round((new Date(endDate.value).getTime() - new Date(startDate.value).getTime()) / (1000 * 60 * 60 * 24) + 1);
-            costPerDay.value = pfCount.value * 4;
-            costPerPeriod.value = costPerDay.value * countOfDays;
-
-            sumPerPeriod += Number(costPerPeriod.value);
+            setCostPerDayValue(advertisement, pfCount * 4);
+            setCostPerPeriodValue(advertisement, pfCount * 4 * countOfDays);
+            sumPerPeriod += Number(pfCount * 4 * countOfDays);
         });
-        document.querySelector("input.summary").value = sumPerPeriod;
+        setSummaryValue(sumPerPeriod);
     }
-
     updateCosts();
 </script>

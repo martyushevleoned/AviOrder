@@ -27,8 +27,7 @@ public class OrderController {
     public String editOrderId(@PathVariable long id, Model model) {
         if (!orderService.isExist(id))
             return "orderNotFound";
-        model.addAttribute("id", id);
-        model.addAttribute("links", orderService.getLinksByOrderId(id));
+        model.addAttribute("orderDto", orderService.getOrderDto(id));
         return "editOrder";
     }
 
@@ -36,8 +35,7 @@ public class OrderController {
     public String viewOrderId(@PathVariable long id, Model model) {
         if (!orderService.isExist(id))
             return "orderNotFound";
-        model.addAttribute("id", id);
-        model.addAttribute("links", orderService.getLinksByOrderId(id));
+        model.addAttribute("orderDto", orderService.getOrderDto(id));
         return "viewOrder";
     }
 

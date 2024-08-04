@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-@Entity(name = "links")
+@Entity(name = "advertisement")
 public class Advertisement {
 
     @Id
@@ -25,6 +25,9 @@ public class Advertisement {
 
     @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate endDate;
+
+    @Column(nullable = false)
+    private Boolean enableContact;
 
     public Advertisement() {
     }
@@ -75,5 +78,13 @@ public class Advertisement {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public Boolean getEnableContact() {
+        return enableContact;
+    }
+
+    public void setEnableContact(Boolean enableContact) {
+        this.enableContact = enableContact;
     }
 }

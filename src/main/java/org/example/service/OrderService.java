@@ -56,11 +56,14 @@ public class OrderService {
         return orderRepository.existsById(orderId);
     }
 
-    public List<AdvertisementDto> getLinksByOrderId(long orderId) {
+    public OrderDto getOrderDto(long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("заказ не существует"));
-        return order.getAdvertisements().stream().map(advertisement ->
-                new AdvertisementDto(advertisement.getLink(), advertisement.getPfCount(), advertisement.getStartDate(), advertisement.getEndDate())
+
+        List<AdvertisementDto> advertisements = order.getAdvertisements().stream().map(advertisement ->
+                new AdvertisementDto(advertisement.getLink(), advertisement.getPfCount(), advertisement.getStartDate(), advertisement.getEndDate(), advertisement.getEnableContact())
         ).toList();
+
+        return new OrderDto(orderId, advertisements);
     }
 
     @Transactional
@@ -76,6 +79,7 @@ public class OrderService {
             advertisement.setPfCount(advertisementDto.pfCount());
             advertisement.setStartDate(advertisementDto.startDate());
             advertisement.setEndDate(advertisementDto.endDate());
+            advertisement.setEnableContact(advertisementDto.enableContact());
             return advertisement;
         }).toList();
         advertisementRepository.saveAll(newAdvertisements);
