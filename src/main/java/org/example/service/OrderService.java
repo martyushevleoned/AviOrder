@@ -1,18 +1,17 @@
 package org.example.service;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.model.dto.AdvertisementDto;
 import org.example.model.dto.OrderDto;
 import org.example.model.entity.Advertisement;
 import org.example.model.entity.Order;
 import org.example.model.repository.AdvertisementRepository;
 import org.example.model.repository.OrderRepository;
+import org.example.utils.WorkbookUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +25,13 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final AdvertisementRepository advertisementRepository;
+    private final WorkbookUtils workbookUtils;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, AdvertisementRepository advertisementRepository) {
+    public OrderService(OrderRepository orderRepository, AdvertisementRepository advertisementRepository, WorkbookUtils workbookUtils) {
         this.orderRepository = orderRepository;
         this.advertisementRepository = advertisementRepository;
+        this.workbookUtils = workbookUtils;
     }
 
     /**
@@ -87,43 +88,15 @@ public class OrderService {
 
     public Resource generateOrderExcelDocument(long orderId) {
 
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("заказ не существует"));
+        OrderDto orderDto = getOrderDto(orderId);
 
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("" + orderId);
-
-        final int[] index = {0};
-        order.getAdvertisements().forEach(advertisement -> {
-            Row row = sheet.createRow(index[0]);
-
-            Cell link = row.createCell(0);
-            Cell pfCount = row.createCell(1);
-            Cell startDate = row.createCell(2);
-            Cell endDate = row.createCell(3);
-            Cell costPerDay = row.createCell(4);
-            Cell costPerPeriod = row.createCell(5);
-            Cell contacts = row.createCell(6);
-
-            link.setCellValue(advertisement.getLink());
-            pfCount.setCellValue(advertisement.getPfCount());
-            startDate.setCellValue(advertisement.getStartDate());
-            endDate.setCellValue(advertisement.getEndDate());
-
-            index[0]++;
-        });
-
-        try {
-            File file = new File("order.xlsx");
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-
-            workbook.write(fileOutputStream);
-            workbook.close();
-
-            fileOutputStream.close();
-            return new FileSystemResource(file);
-
+        try (
+                Workbook workbook = workbookUtils.generateOrderWorkbook(orderDto);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            workbook.write(byteArrayOutputStream);
+            return new ByteArrayResource(byteArrayOutputStream.toByteArray());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Ошибка создания excel документа");
         }
     }
 }

@@ -37,6 +37,7 @@
 <footer>
     <div><button class="addAdvertisement">добавить объявление</button></div>
     <div><button class="save">сохранить</button></div>
+    <div><a th:href="@{/order/download/{id}(id=${id})}"><button>Скачать Excel</button></a></div>
     <div><a th:href="@{/order/view/{id}(id=${id})}"><button>Страница просмотра</button></a></div>
     <div><span>Итоговая стоимость: </span><label><input class="summary" type="number" value="0" readonly></label></div>
 </footer>

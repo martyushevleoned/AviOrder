@@ -26,9 +26,10 @@ public class FileController {
     public ResponseEntity<Resource> downloadExcel(@PathVariable long id) {
 
         Resource resource = orderService.generateOrderExcelDocument(id);
+        String resourceName = String.format("order-%s.xlsx", id);
         return ResponseEntity
                 .ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\" ")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resourceName + "\" ")
                 .body(resource);
     }
 }

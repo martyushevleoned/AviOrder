@@ -3,7 +3,6 @@
 <head>
     <title>Order Page</title>
     <link th:href="@{/css/order.css}" rel="stylesheet" />
-    <script type="text/javascript" th:src="@{/js/script.js}"></script>
 </head>
 <body>
 <input th:value="${orderDto.orderId}" id="orderId" type="hidden"/>
@@ -22,17 +21,18 @@
             <td><span>накручивать контакты</span></td>
         </tr>
         <tr th:each="advertisement : ${orderDto.advertisementDtoList}" class="advertisement">
-            <td><label><input type="text" th:value="${advertisement.link}" placeholder="ссылка"></label></td>
-            <td><label><input type="number" th:value="${advertisement.pfCount}"></label></td>
-            <td><label><input type="date" th:value="${advertisement.startDate}"></label></td>
-            <td><label><input type="date" th:value="${advertisement.endDate}"></label></td>
+            <td><label><input type="text" th:value="${advertisement.link}" placeholder="ссылка" readonly></label></td>
+            <td><label><input type="number" th:value="${advertisement.pfCount}" readonly></label></td>
+            <td><label><input type="date" th:value="${advertisement.startDate}" readonly></label></td>
+            <td><label><input type="date" th:value="${advertisement.endDate}" readonly></label></td>
             <td><label><input type="number" readonly></label></td>
             <td><label><input type="number" readonly></label></td>
-            <td><label><input type="checkbox" th:checked="${advertisement.enableContact}"></label></td>
+            <td><label><input type="checkbox" th:checked="${advertisement.enableContact}" readonly></label></td>
         </tr>
     </table>
 </div>
 <footer>
+    <div><a th:href="@{/order/download/{id}(id=${id})}"><button>Скачать Excel</button></a></div>
     <div><span>Итоговая стоимость: </span><label><input class="summary" type="number" value="0" readonly></label></div>
 </footer>
 </body>
