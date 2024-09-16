@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="ru">
+<head>
+    <title>Auth Page</title>
+</head>
+<body>
+<h1>Страница Авторизации</h1>
+<form th:action="@{/login}" method="post">
+    <div><label><input type="text" name="username" placeholder="Username"/></label></div>
+    <div><label><input type="password" name="password" placeholder="Password"/></label></div>
+    <input type="submit" value="Войти"/>
+</form>
+<h3><a th:href="@{/registration}">Зарегистрируйся</a></h3>
+</body>
+</html>
