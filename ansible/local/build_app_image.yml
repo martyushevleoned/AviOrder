@@ -1,0 +1,13 @@
+- name: build avi-order image
+  hosts: localhost
+  become: true
+  tasks:
+    - name: remove old image
+      community.docker.docker_image_remove:
+        name: avi-order
+        force: true
+    - name: build new image
+      community.docker.docker_image_build:
+        name: avi-order:latest
+        path: ../../
+        dockerfile: Dockerfile

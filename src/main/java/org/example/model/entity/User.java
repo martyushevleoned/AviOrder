@@ -2,6 +2,7 @@ package org.example.model.entity;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +20,9 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private Instant creationTime = Instant.now();
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "userRole", joinColumns = @JoinColumn(name = "userId"))
@@ -57,5 +61,9 @@ public class User {
 
     public List<Order> getOrders() {
         return orders;
+    }
+
+    public Instant getCreationTime() {
+        return creationTime;
     }
 }

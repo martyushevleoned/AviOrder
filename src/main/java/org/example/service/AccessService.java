@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.model.entity.Order;
+import org.example.model.entity.Role;
 import org.example.model.entity.User;
 import org.example.model.repository.OrderRepository;
 import org.example.model.repository.UserRepository;
@@ -22,9 +23,15 @@ public class AccessService {
 
     /**
      * Вызывает исключение если у пользователя недостаточно прав для редактирования страницы
+     * {@link Role#USER}
+     * {@link Role#WORKER}
      */
-    public void editAccess(UserDetails userDetails, long orderId) {
+    public void editOrderAccess(UserDetails userDetails, long orderId) {
+
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+        if (user.getRoles().contains(Role.WORKER))
+            return;
+
         Order order = orderRepository.findById(orderId).orElseThrow();
         if (user.getId() != order.getUser().getId())
             throw new RuntimeException(

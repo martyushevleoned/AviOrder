@@ -1,0 +1,15 @@
+- name: show images and containers lists
+  hosts: '{{ host }}'
+  tasks:
+    - name: get docker info
+      become: true
+      community.docker.docker_host_info:
+        images: true
+        containers: true
+      register: docker
+    - name: Show images list
+      ansible.builtin.debug:
+        var: docker.images
+    - name: Show containers list
+      ansible.builtin.debug:
+        var: docker.containers

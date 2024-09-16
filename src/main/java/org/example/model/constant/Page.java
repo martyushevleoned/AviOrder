@@ -1,12 +1,28 @@
 package org.example.model.constant;
 
-public interface Page {
+public enum Page implements Url {
+    EDIT_ORDER("/order/edit", "editOrder"),
+    VIEW_ORDER("/order/view", "viewOrder"),
+    LOGIN("/login", "login"),
+    REGISTRATION("/registration", "registration"),
+    ACCOUNT("/account", "account"),
+    HOME("/", "home"),
+    ADMIN("/admin", "admin");
 
-    String editOrder = "editOrder";
-    String viewOrder = "viewOrder";
-    String login = "login";
-    String registration = "registration";
-    String account = "account";
-    String home = "home";
-    String error = "orderNotFound";
+    private final String url;
+    private final String template;
+
+    Page(String url, String template) {
+        this.url = url;
+        this.template = template;
+    }
+
+    @Override
+    public String getUrl() {
+        return url;
+    }
+
+    public String getTemplate() {
+        return template;
+    }
 }

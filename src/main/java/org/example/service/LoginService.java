@@ -4,7 +4,7 @@ import org.example.model.entity.Role;
 import org.example.model.entity.User;
 import org.example.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -13,10 +13,10 @@ import java.util.Set;
 public class LoginService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public LoginService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public LoginService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }

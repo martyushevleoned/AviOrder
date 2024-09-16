@@ -1,0 +1,8 @@
+- name: Remove project stuff
+  hosts: server
+  become: true
+  tasks:
+    - name: Remove project folder
+      ansible.builtin.file:
+        path: /ansible
+        state: absent

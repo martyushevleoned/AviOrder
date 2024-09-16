@@ -1,0 +1,3 @@
+- import_playbook: ../utils/drop_all_containers.yml
+  vars:
+    host: localhost

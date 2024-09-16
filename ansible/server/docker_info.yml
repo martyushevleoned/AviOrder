@@ -1,0 +1,3 @@
+- import_playbook: ../utils/docker_info.yml
+  vars:
+    host: server

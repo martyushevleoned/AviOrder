@@ -1,0 +1,12 @@
+- name: remove all docker images
+  hosts: '{{ host }}'
+  become: true
+  tasks:
+    - name: get docker info
+      become: true
+      community.docker.docker_host_info:
+        images: true
+      register: docker
+    - name: remove all images
+      when: (docker.images | length) != 0
+      action: shell docker image remove -f $(docker images -aq)

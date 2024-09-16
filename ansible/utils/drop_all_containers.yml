@@ -1,0 +1,12 @@
+- name: remove all docker containers
+  hosts: '{{ host }}'
+  become: true
+  tasks:
+    - name: get docker info
+      become: true
+      community.docker.docker_host_info:
+        containers: true
+      register: docker
+    - name: remove all containers
+      when: (docker.containers | length) != 0
+      action: shell docker rm -f $(docker ps -aq)

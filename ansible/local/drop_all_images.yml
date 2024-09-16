@@ -1,0 +1,3 @@
+- import_playbook: ../utils/drop_all_images.yml
+  vars:
+    host: localhost
