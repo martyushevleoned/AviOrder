@@ -1,0 +1,6 @@
+- import_playbook: ../utils/drop_all_containers.yml
+  vars:
+    host: server
+- import_playbook: ../utils/drop_all_images.yml
+  vars:
+    host: server

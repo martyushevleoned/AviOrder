@@ -19,12 +19,15 @@ public class AccountController {
         this.orderService = orderService;
     }
 
+    /**
+     * {@link Page#ACCOUNT}
+     */
     @GetMapping("/account")
     public String account(
             @AuthenticationPrincipal UserDetails userDetails,
             Model model
     ) {
         model.addAttribute("orders", orderService.getAllOrdersOfUser(userDetails));
-        return Page.account;
+        return Page.ACCOUNT.getTemplate();
     }
 }

@@ -1,32 +1,26 @@
 # Команды для работы с Docker
 
 ## Работа с образами
-Сборка образа
+### Сборка образа
 ```
-sudo docker build image-name .
+docker build -t image-name .
 ```
-Скачать образ c docker hub
+### Скачать образ c docker hub
 ```
-sudo docker pull image-id
+docker pull image-id
 ```
-Удалить образ
+### Удалить образ
 ```
-sudo docker rmi image-id
+### docker rmi image-id
 ```
+
+---
 ## Работа с контейнерами
-Запустить контейнер с приложением (Обязательно указать параметры бд)
+### Запустить контейнер
 ```
-sudo docker run image-id
+docker run image-id
 ```
-Остановить контейнер
-```
-sudo docker stop container-id
-```
-Удалить контейнер
-```
-sudo docker rm container-id
-```
-#### флаги запуска
+#### Опции:
 ``--name container-id`` - указать имя контейнера  
 ``--net=network-id`` - указать в какой сети запустить контейнер  
 ``-p 80:8080`` - указать внешний и внутренний порт  
@@ -34,34 +28,49 @@ sudo docker rm container-id
 ``-d`` - скрыть консоль контейнера после запуска  
 ``--rm`` - удалить контейнер после его остановки  
 ``--restart=always`` - перезапускать контейнер при остановке
+
+### Остановить контейнер
+```
+docker stop container-id
+```
+### Удалить контейнер
+```
+docker rm container-id
+```
+
+---
 ## Работа с сетью
-Создать сеть
+### Создать сеть
 ```
-sudo docker network create network-id
+docker network create network-id
 ```
-Вывести информацию о сети
+### Вывести информацию о сети
 ```
-sudo docker network inspect network-id
+docker network inspect network-id
 ```
-Вывести список сетей
+### Вывести список сетей
 ```
-sudo docker network ls
+docker network ls
 ```
-Удалить сеть
+### Удалить сеть
 ```
-sudo docker network rm network-id
+docker network rm network-id
 ```
+
+---
 ## Работа с файлами
-Сохранить образа в файл
+### Сохранить образа в файл
 ```
-sudo docker save -o /image/file.tar image-id
+docker save -o /image/file.tar image-id
 ```
-Загрузить образа из файла
+### Загрузить образа из файла
 ```
-sudo docker load -i /image/file.tar
+docker load -i /image/file.tar
 ```
-### Дополнительные команды
-Сохранить дамп БД из контейнера
+
+---
+## Дополнительные команды
+### Сохранить дамп БД из контейнера
 ```
-sudo docker exec -t docker-postgres pg_dumpall -c -U postgres > dump_`date +%Y-%m-%d"_"%H_%M_%S`.sql
+docker exec -t docker-postgres pg_dumpall -c -U postgres > dump_`date +%Y-%m-%d"_"%H_%M_%S`.sql
 ```

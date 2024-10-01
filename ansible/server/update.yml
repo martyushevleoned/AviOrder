@@ -1,0 +1,4 @@
+- import_playbook: task/update_image.yml
+- import_playbook: task/create_project.yml
+- import_playbook: task/recreate_app_container.yml
+- import_playbook: task/remove_project.yml

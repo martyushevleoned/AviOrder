@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import org.example.model.constant.Page;
+import org.example.model.constant.Resource;
 import org.example.model.dto.OrderDto;
 import org.example.service.AccessService;
 import org.example.service.OrderService;
@@ -24,49 +25,66 @@ public class OrderController {
         this.accessService = accessService;
     }
 
+    /**
+     * {@link Resource#ORDER}
+     * {@link Page#EDIT_ORDER}
+     */
     @GetMapping("/order")
     public String order(@AuthenticationPrincipal UserDetails userDetails) {
-        return "redirect:/order/edit/" + orderService.generateOrder(userDetails);
+        long orderId = orderService.generateOrder(userDetails);
+        return "redirect:"+ Page.EDIT_ORDER.getParamUrl(orderId);
     }
 
+    /**
+     * {@link Page#EDIT_ORDER}
+     */
     @GetMapping("/order/edit/{orderId}")
     public String editOrderId(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable long orderId,
             Model model
     ) {
-        accessService.editAccess(userDetails, orderId);
+        accessService.editOrderAccess(userDetails, orderId);
         model.addAttribute("orderDto", orderService.getOrderDto(orderId));
-        return Page.editOrder;
+        return Page.EDIT_ORDER.getTemplate();
     }
 
+    /**
+     * {@link Page#VIEW_ORDER}
+     */
     @GetMapping("/order/view/{id}")
     public String viewOrderId(
             @PathVariable long id,
             Model model
     ) {
         model.addAttribute("orderDto", orderService.getOrderDto(id));
-        return Page.viewOrder;
+        return Page.VIEW_ORDER.getTemplate();
     }
 
+    /**
+     * {@link Resource#SAVE_ORDER}
+     */
     @PutMapping("/order/save")
     @ResponseBody
     public ResponseEntity<String> saveOrder(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody OrderDto orderDto
     ) {
-        accessService.editAccess(userDetails, orderDto.orderId());
+        accessService.editOrderAccess(userDetails, orderDto.orderId());
         orderService.save(orderDto);
         return ResponseEntity.ok("data saved");
     }
 
+    /**
+     * {@link Resource#DELETE_ORDER}
+     */
     @PostMapping("/order/delete")
     public String deleteOrder(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam long orderId
     ) {
-        accessService.editAccess(userDetails, orderId);
+        accessService.editOrderAccess(userDetails, orderId);
         orderService.deleteOrder(orderId);
-        return "redirect:/account";
+        return "redirect:" + Page.ACCOUNT.getUrl();
     }
 }

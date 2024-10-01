@@ -1,11 +1,23 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" lang="ru">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml" lang="ru">
 <head>
-    <title>Home Page</title>
+    <title>AviUp</title>
+    <link th:href="@{/static/img/favicon.ico}" rel="icon" type="image/ico">
+    <link th:href="@{/static/css/main.css}" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-<h1>Домашняя страница</h1>
-<h3>Личный <a th:href="@{/account}">кабинет</a></h3>
-<h3>Создай свой <a th:href="@{/order}">заказ</a></h3>
+<div>
+    <h3>Домашняя страница</h3>
+</div>
+<div sec:authorize="isAnonymous()">
+    <h3><a th:href="@{/login}">Войти</a></h3>
+</div>
+<div sec:authorize="hasAuthority('ADMIN')">
+    <h3>Перейти к <a th:href="@{/admin}">инструментам статистики</a></h3>
+</div>
+<div sec:authorize="hasAuthority('USER')">
+    <h3>Личный <a th:href="@{/account}">кабинет</a></h3>
+    <h3>Создай свой <a th:href="@{/order}">заказ</a></h3>
+</div>
 </body>
 </html>

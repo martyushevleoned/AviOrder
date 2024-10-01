@@ -1,0 +1,38 @@
+- name: Archive image
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Archive image
+      community.docker.docker_image:
+        name: avi-order
+        tag: latest
+        archive_path: app.tar
+        source: local
+
+- name: Send image
+  hosts: server
+  become: true
+  tasks:
+    - name: Send image
+      ansible.builtin.copy:
+        src: ./app.tar
+        dest: /app.tar
+    - name: remove old image
+      community.docker.docker_image_remove:
+        name: avi-order
+        force: true
+    - name: Load app image from file
+      community.docker.docker_image_load:
+        path: /app.tar
+    - name: Remove image file
+      ansible.builtin.file:
+        path: /app.tar
+        state: absent
+
+- name: Remove local image file
+  hosts: localhost
+  tasks:
+    - name: Remove local image file
+      ansible.builtin.file:
+        path: ./app.tar
+        state: absent

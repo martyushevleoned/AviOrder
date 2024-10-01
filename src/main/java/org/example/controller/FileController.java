@@ -21,6 +21,9 @@ public class FileController {
         this.orderService = orderService;
     }
 
+    /**
+     * {@link org.example.model.constant.Resource#DOWNLOAD_ORDER}
+     */
     @GetMapping("/order/download/{id}")
     @ResponseBody
     public ResponseEntity<Resource> downloadExcel(@PathVariable long id) {

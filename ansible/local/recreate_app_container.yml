@@ -1,0 +1,17 @@
+- name: Run using a project directory
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Tear down app container
+      community.docker.docker_compose_v2:
+        project_src: ../../docker
+        env_files: ./dev.env
+        state: absent
+        services:
+          - app
+    - name: build new app container
+      community.docker.docker_compose_v2:
+        project_src: ../../docker
+        env_files: ./dev.env
+        services:
+          - app

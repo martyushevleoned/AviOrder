@@ -1,0 +1,8 @@
+- name: Run using a project directory
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Create and start services
+      community.docker.docker_compose_v2:
+        project_src: ../../docker
+        env_files: ./dev.env

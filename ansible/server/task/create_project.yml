@@ -1,0 +1,16 @@
+- name: Create project
+  hosts: server
+  become: true
+  tasks:
+    - name: Create project folder
+      ansible.builtin.file:
+        path: /ansible
+        state: directory
+    - name: Send docker-compose.yml
+      ansible.builtin.copy:
+        src: ../../../docker/docker-compose.yml
+        dest: /ansible/docker-compose.yml
+    - name: Send prod.env
+      ansible.builtin.copy:
+        src: ../../../docker/prod.env
+        dest: /ansible/.env

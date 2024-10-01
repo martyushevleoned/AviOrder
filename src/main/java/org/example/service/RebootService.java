@@ -5,7 +5,7 @@ import org.example.model.entity.Role;
 import org.example.model.entity.User;
 import org.example.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -15,10 +15,10 @@ import java.util.Set;
 public class RebootService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final boolean needToCreateTestUsers;
 
-    public RebootService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, @Value("${spring.jpa.hibernate.ddl-auto}") String createProperty) {
+    public RebootService(UserRepository userRepository, PasswordEncoder passwordEncoder, @Value("${spring.jpa.hibernate.ddl-auto}") String createProperty) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.needToCreateTestUsers = Objects.equals(createProperty, "create");
@@ -30,8 +30,9 @@ public class RebootService {
         if (!needToCreateTestUsers)
             return;
 
-        createUser("qwe", "qwe", Set.of(Role.USER));
-        createUser("123", "123", Set.of(Role.USER));
+        createUser("admin", "admin", Set.of(Role.ADMIN));
+        createUser("worker", "worker", Set.of(Role.WORKER, Role.USER));
+        createUser("user", "user", Set.of(Role.USER));
     }
 
     private void createUser(String username, String password, Set<Role> roles) {

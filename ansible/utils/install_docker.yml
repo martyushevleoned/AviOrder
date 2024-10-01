@@ -1,0 +1,10 @@
+- name: install docker
+  hosts: '{{ host }}'
+  become: true
+  tasks:
+    - name: Download initial docker script
+      action: shell wget https://get.docker.com -O /get-docker.sh
+    - name: Execute initial docker script
+      action: shell sh /get-docker.sh
+    - name: Remove initial docker script
+      action: shell rm /get-docker.sh

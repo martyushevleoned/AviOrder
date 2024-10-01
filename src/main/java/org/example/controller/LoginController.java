@@ -16,14 +16,20 @@ public class LoginController {
         this.loginService = loginService;
     }
 
+    /**
+     * {@link Page#REGISTRATION}
+     */
     @GetMapping("/registration")
     public String registration() {
-        return Page.registration;
+        return Page.REGISTRATION.getTemplate();
     }
 
+    /**
+     * {@link Page#REGISTRATION}
+     */
     @PostMapping("/registration")
     public String registerUser(@RequestParam String username, @RequestParam String password) {
         loginService.register(username, password);
-        return Page.login;
+        return Page.LOGIN.getTemplate();
     }
 }

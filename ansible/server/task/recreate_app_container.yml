@@ -1,0 +1,15 @@
+- name: Recreate app container
+  hosts: server
+  become: true
+  tasks:
+    - name: Tear down app container
+      community.docker.docker_compose_v2:
+        project_src: /ansible
+        state: absent
+        services:
+          - app
+    - name: build new app container
+      community.docker.docker_compose_v2:
+        project_src: /ansible
+        services:
+          - app

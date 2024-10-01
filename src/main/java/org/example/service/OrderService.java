@@ -2,7 +2,6 @@ package org.example.service;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.example.model.dto.OrderDto;
-import org.example.model.entity.Advertisement;
 import org.example.model.entity.Order;
 import org.example.model.entity.User;
 import org.example.model.repository.AdvertisementRepository;
@@ -25,9 +24,9 @@ import java.util.UUID;
 @Service
 public class OrderService {
 
+    private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final AdvertisementRepository advertisementRepository;
-    private final UserRepository userRepository;
     private final WorkbookUtils workbookUtils;
 
     @Autowired
@@ -59,16 +58,6 @@ public class OrderService {
     }
 
     /**
-     * Собирает дто заказа
-     */
-    public OrderDto getOrderDto(long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow();
-        order.setRecentView(Instant.now());
-        orderRepository.save(order);
-        return order.toDto();
-    }
-
-    /**
      * возвращает все заказы пользователя
      */
     public List<OrderDto> getAllOrdersOfUser(UserDetails userDetails) {
@@ -86,19 +75,20 @@ public class OrderService {
         order.setRecentEdit(Instant.now());
         orderRepository.save(order);
 
-        List<Advertisement> existedAdvertisements = order.getAdvertisements();
-        List<Advertisement> newAdvertisements = orderDto.advertisementDtoList().stream()
-                .map(advertisementDto -> advertisementDto.toAdvertisement(order)).toList();
+        advertisementRepository.deleteAllByOrder(order);
+        advertisementRepository.saveAll(orderDto.advertisementDtoList().stream().map(
+                advertisementDto -> advertisementDto.toAdvertisement(order)
+        ).toList());
+    }
 
-        List<Advertisement> advertisementsToDelete = existedAdvertisements.stream()
-                .filter(advertisementDto -> !newAdvertisements.contains(advertisementDto))
-                .toList();
-        advertisementRepository.deleteAll(advertisementsToDelete);
-
-        List<Advertisement> advertisementsToSave = newAdvertisements.stream()
-                .filter(advertisementDto -> !existedAdvertisements.contains(advertisementDto))
-                .toList();
-        advertisementRepository.saveAll(advertisementsToSave);
+    /**
+     * Собирает дто заказа
+     */
+    public OrderDto getOrderDto(long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow();
+        order.setRecentView(Instant.now());
+        orderRepository.save(order);
+        return order.toDto();
     }
 
     /**
