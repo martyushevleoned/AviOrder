@@ -10,18 +10,18 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public class LoginService {
+public class RegistrationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public LoginService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public RegistrationService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void register(String username, String password) {
+    public void registerUser(String username, String password) {
 
         if (userRepository.findByUsername(username).isPresent())
             throw new RuntimeException("Пользователь " + username + " существует");

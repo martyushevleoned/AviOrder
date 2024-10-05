@@ -1,13 +1,10 @@
 package org.example.model.constant;
 
 public enum Page implements Url {
-    EDIT_ORDER("/order/edit", "editOrder"),
-    VIEW_ORDER("/order/view", "viewOrder"),
+
+    ROOT("/", "root"),
     LOGIN("/login", "login"),
-    REGISTRATION("/registration", "registration"),
-    ACCOUNT("/account", "account"),
-    HOME("/", "home"),
-    ADMIN("/admin", "admin");
+    REGISTRATION("/registration", "registration");
 
     private final String url;
     private final String template;

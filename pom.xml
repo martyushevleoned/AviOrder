@@ -24,6 +24,7 @@
     </properties>
 
     <dependencies>
+        <!-- Spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -33,7 +34,7 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!--Thymeleaf-->
+        <!-- Thymeleaf -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -43,7 +44,7 @@
             <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
 
-        <!--Data Base-->
+        <!-- Database -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -53,7 +54,7 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
-        <!--Excel-->
+        <!-- Excel -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -65,7 +66,7 @@
             <version>${poi.version}</version>
         </dependency>
 
-        <!--Test-->
+        <!-- Test -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

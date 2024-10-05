@@ -12,9 +12,8 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController(Page.HOME.getUrl()).setViewName(Page.HOME.getTemplate());
+        registry.addViewController(Page.ROOT.getUrl()).setViewName(Page.ROOT.getTemplate());
         registry.addViewController(Page.LOGIN.getUrl()).setViewName(Page.LOGIN.getTemplate());
-        registry.addViewController(Page.ADMIN.getUrl()).setViewName(Page.ADMIN.getTemplate());
     }
 
     @Override
