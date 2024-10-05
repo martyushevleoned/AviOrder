@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" lang="ru">
-<head th:insert="fragments/general.html :: style(title='profile')"></head>
+<head th:insert="~{fragments/general.html :: head(title='profile')}"></head>
 <body>
 <div><h3>Личный кабинет</h3></div>
 <div><h3>Создать заказ <a th:href="@{/order/create}">(тык)</a></h3></div>
 <div><h3>Список заказов:</h3></div>
-<div><span th:text="${orders}"></span></div>
+<ul>
+    <li th:each="order : ${orders}">
+        <a th:href="@{/order/{id}(id=${order.id})}">
+            <span th:text="${order.name}"></span>
+            <form th:action="@{/order/delete}" method="post">
+                <input name="orderId" th:value="${order.id}" type="hidden">
+                <input type="submit" value="Удалить">
+            </form>
+        </a>
+    </li>
+</ul>
 </body>
 </html>

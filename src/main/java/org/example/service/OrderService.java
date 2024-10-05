@@ -43,7 +43,7 @@ public class OrderService {
 
         Order order = new Order();
         order.setId(uuid);
-        order.setName("Заказ: " + uuid);
+        order.setName(String.format("Заказ №%s", uuid));
         order.setUser(findUser(userDetails));
         orderRepository.save(order);
 
@@ -56,5 +56,9 @@ public class OrderService {
                 .sorted(Comparator.comparing(Order::getRecentEditTime))
                 .map(ProfileOrderDto::createByOrder)
                 .toList();
+    }
+
+    public void deleteOrder(long orderId) {
+        orderRepository.deleteById(orderId);
     }
 }

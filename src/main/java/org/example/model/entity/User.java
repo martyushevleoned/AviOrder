@@ -2,6 +2,7 @@ package org.example.model.entity;
 
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 
 @Entity

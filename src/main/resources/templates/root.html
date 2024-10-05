@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml" lang="ru">
-<head th:insert="fragments/general.html :: style(title='AviUp')"></head>
+<head th:insert="~{fragments/general.html :: head(title='AviUp')}"></head>
 <body>
 <div><h3>Домашняя страница</h3></div>
 <div sec:authorize="isAnonymous()"><h3>Авторизуйтесь для получения полного функционала сервиса <a th:href="@{/login}">(тык)</a></h3></div>
