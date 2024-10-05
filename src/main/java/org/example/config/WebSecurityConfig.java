@@ -40,6 +40,7 @@ public class WebSecurityConfig {
 
                         // users
                         .requestMatchers(HttpMethod.GET, Page.PROFILE.getUrl()).hasAuthority(Role.USER.getAuthority())
+                        .requestMatchers(HttpMethod.GET, Page.ORDER.getAnyParamUrl()).hasAuthority(Role.USER.getAuthority())
                 )
                 .formLogin(form -> form.loginPage(Page.LOGIN.getUrl()).permitAll())
                 .logout(LogoutConfigurer::permitAll)

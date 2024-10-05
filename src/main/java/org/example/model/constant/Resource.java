@@ -4,7 +4,6 @@ public enum Resource implements Url {
 
     STATIC("/static");
 
-
     private final String url;
 
     Resource(String url) {

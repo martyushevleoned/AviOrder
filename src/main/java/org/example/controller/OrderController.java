@@ -6,27 +6,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * {@link Page#PROFILE}
+ * {@link Page#ORDER}
  */
 @Controller
-@RequestMapping("/profile")
-public class ProfileController {
+@RequestMapping("/order")
+public class OrderController {
 
     private final OrderService orderService;
 
     @Autowired
-    public ProfileController(OrderService orderService) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    @GetMapping
-    public String getProfile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        model.addAttribute("orders", orderService.getOrdersList(userDetails));
-        return Page.PROFILE.getTemplate();
+    @GetMapping("/{orderId}")
+    public String order(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable long orderId
+    ) {
+        return "order";
+    }
+
+    @GetMapping("/create")
+    public String createOrder(@AuthenticationPrincipal UserDetails userDetails) {
+        long orderId = orderService.createOrder(userDetails);
+        return "redirect:" + Page.ORDER.getParamUrl(orderId);
     }
 }

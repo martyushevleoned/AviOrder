@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>Личный кабинет</title>
-</head>
-<head th:insert="fragments/general.html :: style"></head>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="ru">
+<head th:insert="fragments/general.html :: style(title='profile')"></head>
 <body>
 <div><h3>Личный кабинет</h3></div>
+<div><h3>Создать заказ <a th:href="@{/order/create}">(тык)</a></h3></div>
 <div><h3>Список заказов:</h3></div>
+<div><span th:text="${orders}"></span></div>
 </body>
 </html>
