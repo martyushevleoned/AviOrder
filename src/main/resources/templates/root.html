@@ -2,9 +2,8 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml" lang="ru">
 <head>
     <title>AviUp</title>
-    <link th:href="@{/static/img/favicon.ico}" rel="icon" type="image/ico">
-    <link th:href="@{/static/css/main.css}" rel="stylesheet" type="text/css"/>
 </head>
+<head th:insert="fragments/general.html :: style"></head>
 <body>
 <div><h3>Домашняя страница</h3></div>
 <div sec:authorize="isAuthenticated()"><h3>Вы авторизованы</h3></div>

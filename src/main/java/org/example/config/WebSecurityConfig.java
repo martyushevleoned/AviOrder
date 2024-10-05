@@ -1,6 +1,7 @@
 package org.example.config;
 
 import org.example.model.constant.Page;
+import org.example.model.constant.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +35,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.GET, Page.ROOT.getUrl()).permitAll()
                         .requestMatchers(HttpMethod.GET, Page.REGISTRATION.getUrl()).permitAll()
                         .requestMatchers(HttpMethod.POST, Page.REGISTRATION.getUrl()).permitAll()
+                        .requestMatchers(HttpMethod.GET, Resource.STATIC.getAnyParamUrl()).permitAll()
                 )
                 .formLogin(form -> form.loginPage(Page.LOGIN.getUrl()).permitAll())
                 .logout(LogoutConfigurer::permitAll)
