@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * {@link Page#REGISTRATION}
  */
 @Controller
+@RequestMapping("/registration")
 public class RegistrationController {
 
     private final RegistrationService registrationService;
@@ -22,12 +24,12 @@ public class RegistrationController {
         this.registrationService = registrationService;
     }
 
-    @GetMapping("/registration")
+    @GetMapping
     public String registration() {
         return Page.REGISTRATION.getTemplate();
     }
 
-    @PostMapping("/registration")
+    @PostMapping
     public String registerUser(@RequestParam String username, @RequestParam String password) {
         registrationService.registerUser(username, password);
         return Page.LOGIN.getTemplate();

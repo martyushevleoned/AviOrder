@@ -6,8 +6,7 @@
 <head th:insert="fragments/general.html :: style"></head>
 <body>
 <div><h3>Домашняя страница</h3></div>
-<div sec:authorize="isAuthenticated()"><h3>Вы авторизованы</h3></div>
 <div sec:authorize="isAnonymous()"><h3>Авторизуйтесь для получения полного функционала сервиса <a th:href="@{/login}">(тык)</a></h3></div>
-<div><h3>Содержание страницы</h3></div>
+<div sec:authorize="isAuthenticated()"><h3>Вы авторизованы <a th:href="@{/profile}">(личный кабинет)</a></h3></div>
 </body>
 </html>

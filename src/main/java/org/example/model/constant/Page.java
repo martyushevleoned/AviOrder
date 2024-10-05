@@ -4,7 +4,8 @@ public enum Page implements Url {
 
     ROOT("/", "root"),
     LOGIN("/login", "login"),
-    REGISTRATION("/registration", "registration");
+    REGISTRATION("/registration", "registration"),
+    PROFILE("/profile", "profile");
 
     private final String url;
     private final String template;
