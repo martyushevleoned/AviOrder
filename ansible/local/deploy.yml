@@ -5,4 +5,4 @@
     - name: Create and start services
       community.docker.docker_compose_v2:
         project_src: ../../docker
-        env_files: ./dev.env
+        env_files: ./develop.env

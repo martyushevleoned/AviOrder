@@ -10,7 +10,7 @@
       ansible.builtin.copy:
         src: ../../../docker/docker-compose.yml
         dest: /ansible/docker-compose.yml
-    - name: Send prod.env
+    - name: Send production.env
       ansible.builtin.copy:
-        src: ../../../docker/prod.env
+        src: ../../../docker/production.env
         dest: /ansible/.env
