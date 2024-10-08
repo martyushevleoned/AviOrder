@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+// TODO Разобраться с миграциями
 @Service
 public class RebootService {
 

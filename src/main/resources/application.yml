@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://172.17.0.1:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${DB_INIT}
+server:
+  port: 8443
+  http:
+    port: 8080
+
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+server:
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password=: ${KEYSTORE_PASSWORD}
+    keyStoreType: PKCS12
+    keyAlias: tomcat

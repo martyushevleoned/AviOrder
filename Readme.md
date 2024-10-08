@@ -33,13 +33,12 @@
    * Проверить доступность локального устройства и сервера
 3. Настроить [Docker](readme/docker.md)
    * Установить на Linux можно при помощи Ansible
-   * Указать параметры для разработки в [dev.env](docker/dev.env) (его можно указать в конфигурации запуска)
-   * Указать параметры для развёртывания в [prod.env](docker/prod.env) 
+   * Указать параметры для разработки в [dev.env](docker/develop.env) (его можно указать в конфигурации запуска)
+   * Указать параметры для развёртывания в [prod.env](docker/production.env) 
 4. Настроить HTTPS (для развёртывания)
    * [Гайд по генерированию keystore.p12](https://habr.com/ru/articles/812257/)
    * Файл [keystore.p12](src/main/resources/keystore.p12) следует разместить в [resources](src/main/resources)
-   * Указать пароль от keystore.p12 и указать порт 443 в [prod.env](docker/prod.env)
-   * При использовании HTTP указать порт 80 и убрать строку ``spring_profiles_active=prod`` в [prod.env](docker/prod.env)
+   * Указать пароль от keystore.p12 в [prod.env](docker/production.env)
 5. Настроить [Межсетевой экран](readme/ufw.md) (для развёртывания)
    * Включить межсетевой экран
    * Открыть порт SSH
@@ -77,6 +76,7 @@ ansible-playbook ansible/local/drop_all_containers.yml
 ansible-playbook ansible/local/drop_all_images.yml
 ```
 
+---
 ## Развёртывание на сервере на сервере
 ### Посмотреть список образов и контейнеров
 ```shell
@@ -108,7 +108,6 @@ ansible-playbook ansible/server/drop_all.yml
 * тесты
 * формат даты при экспорте в .xlsx
 * валидация данных в формах на стороне клиента и сервера
-* фрагменты thymeleaf
-* перенаправление с 80 порта на 443
 ### Активные задачи
-* Разобраться откуда лишние образы на сервере
+* фрагменты thymeleaf
+* переписать страницы с основным функционалом

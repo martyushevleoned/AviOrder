@@ -5,13 +5,13 @@
     - name: Tear down db container
       community.docker.docker_compose_v2:
         project_src: ../../docker
-        env_files: ./dev.env
+        env_files: ./develop.env
         state: absent
         services:
           - db
     - name: build new db container
       community.docker.docker_compose_v2:
         project_src: ../../docker
-        env_files: ./dev.env
+        env_files: ./develop.env
         services:
           - db
