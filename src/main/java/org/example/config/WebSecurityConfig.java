@@ -31,13 +31,11 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(requests -> requests
-
                         // permit all
                         .requestMatchers(HttpMethod.GET, Page.ROOT.getUrl()).permitAll()
                         .requestMatchers(HttpMethod.GET, Page.REGISTRATION.getUrl()).permitAll()
                         .requestMatchers(HttpMethod.POST, Page.REGISTRATION.getUrl()).permitAll()
                         .requestMatchers(HttpMethod.GET, Resource.STATIC.getAnyParamUrl()).permitAll()
-
                         // users
                         .requestMatchers(HttpMethod.GET, Page.PROFILE.getUrl()).hasAuthority(Role.USER.getAuthority())
                         .requestMatchers(HttpMethod.GET, Page.ORDER.getAnyParamUrl()).hasAuthority(Role.USER.getAuthority())
