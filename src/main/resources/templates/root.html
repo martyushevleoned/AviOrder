@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml" lang="ru">
-<head th:insert="~{fragments/general.html :: head(title='AviUp')}"></head>
+<head>
+    <title>AviUp</title>
+    <meta charset="UTF-8">
+    <link th:href="@{/static/img/favicon.ico}" rel="icon" type="image/ico">
+    <link th:href="@{/static/css/main.css}" rel="stylesheet" type="text/css"/>
+</head>
 <body>
 <div><h3>Домашняя страница</h3></div>
 <div sec:authorize="isAnonymous()"><h3>Авторизуйтесь для получения полного функционала сервиса <a th:href="@{/login}">(тык)</a></h3></div>

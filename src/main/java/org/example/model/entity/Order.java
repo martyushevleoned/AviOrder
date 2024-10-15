@@ -3,6 +3,8 @@ package org.example.model.entity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity(name = "orders")
 public class Order {
@@ -21,6 +23,9 @@ public class Order {
 
     @ManyToOne(optional = false)
     private User user;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Advertisement> advertisements = new LinkedList<>();
 
     public long getId() {
         return id;
@@ -60,5 +65,13 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Advertisement> getAdvertisements() {
+        return advertisements;
+    }
+
+    public void setAdvertisements(List<Advertisement> advertisements) {
+        this.advertisements = advertisements;
     }
 }

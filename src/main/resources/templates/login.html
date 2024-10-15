@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" lang="ru">
-<head th:insert="~{fragments/general.html :: head(title='заказ')}"></head>
+<head>
+    <title>Login</title>
+    <meta charset="UTF-8">
+    <link th:href="@{/static/img/favicon.ico}" rel="icon" type="image/ico">
+    <link th:href="@{/static/css/main.css}" rel="stylesheet" type="text/css"/>
+</head>
 <body>
 <h1>Страница Авторизации</h1>
 <form th:action="@{/login}" method="post">

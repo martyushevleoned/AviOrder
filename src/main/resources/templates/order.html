@@ -1,7 +1,196 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" lang="ru">
-<head th:insert="~{fragments/general.html :: head(title='заказ')}"></head>
+<head>
+    <title>Заказ</title>
+    <meta charset="UTF-8">
+    <link th:href="@{/static/img/favicon.ico}" rel="icon" type="image/ico">
+    <link th:href="@{/static/css/main.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/static/css/order.css}" rel="stylesheet" type="text/css"/>
+    <meta name="id" th:content="${order.id}"/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+</head>
 <body>
-<div><h3>Страница заказа</h3></div>
+<div><span>Страница заказа: </span><label><input id="name" th:value="${order.name}"></label></div>
+<div class="NoIndent">
+    <table class="NoIndent">
+        <tr>
+            <td><span>ссылка на объявление</span></td>
+            <td><span>количество пф в день</span></td>
+            <td><span>дата начала</span></td>
+            <td><span>дата конца</span></td>
+            <td><span>стоимость в день</span></td>
+            <td><span>стоимость за период продвижения</span></td>
+            <td><span>накручивать контакты</span></td>
+            <td><span>убрать объявление</span></td>
+        </tr>
+        <tr th:each="advertisement : ${order.advertisements}">
+            <td><label><input type="text" th:value="${advertisement.link}" placeholder="ссылка"></label></td>
+            <td><label><input type="number" th:value="${advertisement.productFactorCountPerDay}"></label></td>
+            <td><label><input type="date" th:value="${advertisement.promotionStartDate}"></label></td>
+            <td><label><input type="date" th:value="${advertisement.promotionEndDate}"></label></td>
+            <td><label><input type="number" readonly></label></td>
+            <td><label><input type="number" readonly></label></td>
+            <td><label><input type="checkbox" th:checked="${advertisement.promoteContacts}"></label></td>
+            <td><button>убрать объявление</button></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><span class="NoIndent">Итоговая стоимость: </span></td>
+            <td><label><input class="summary" type="number" value="0" readonly></label></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+<footer>
+    <div><button class="addAdvertisement">добавить объявление</button></div>
+    <div><button class="save">сохранить</button></div>
+    <div><button class="download">Скачать Excel</button></div>
+    <a th:href="@{/order/download/{id}(id=${order.id})}" style="display: none" id="downloadLink">download</a>
+</footer>
+<script>
+    // getters
+    function getAdvertisements() {
+        let advertisements = Array.from(document.querySelectorAll("tr"));
+        advertisements.shift();
+        advertisements.pop();
+        return advertisements;
+    }
+    function getCurrentDate() {
+        return new Date().toLocaleDateString('en-CA');
+    }
+    function getLink(advertisement) {
+        return advertisement.children[0].children[0].children[0];
+    }
+    function getPfCount(advertisement) {
+        return advertisement.children[1].children[0].children[0];
+    }
+    function getStartDate(advertisement) {
+        return advertisement.children[2].children[0].children[0];
+    }
+    function getEndDate(advertisement) {
+        return advertisement.children[3].children[0].children[0];
+    }
+    function getPromoteContacts(advertisement) {
+        return advertisement.children[6].children[0].children[0];
+    }
+    function getRemoveAdvertisementButton(advertisement) {
+        return advertisement.children[7].children[0];
+    }
+    function getCountOfDays(advertisement) {
+        return Math.round((new Date(getEndDate(advertisement).value).getTime() - new Date(getStartDate(advertisement).value)) / (1000 * 60 * 60 * 24)) + 1;
+    }
+    function getOrderName() {
+        return document.getElementById('name').value;
+    }
+    function getOrderId() {
+        return document.querySelector('meta[name="id"]').content
+    }
+    function getToken() {
+        return document.querySelector('meta[name="_csrf"]').content
+    }
+</script>
+<script>
+    // setters
+    function setCostPerDay(advertisement, costPerDay) {
+        advertisement.children[4].children[0].children[0].value = costPerDay;
+    }
+    function setCostPerPeriod(advertisement, costPerPeriod) {
+        advertisement.children[5].children[0].children[0].value = costPerPeriod;
+    }
+    function setSummaryCost(summaryCost) {
+        document.querySelector("input.summary").value = summaryCost;
+    }
+</script>
+<script>
+    // functions
+    function updateCosts() {
+        const pfCost = 4;
+        let summaryCost = 0;
+        getAdvertisements().forEach(advertisement => {
+            let costPerDay = pfCost * getPfCount(advertisement).value;
+            let costPerPeriod = costPerDay * getCountOfDays(advertisement);
+            setCostPerDay(advertisement, costPerDay);
+            setCostPerPeriod(advertisement, costPerPeriod);
+            summaryCost += costPerPeriod;
+        });
+        setSummaryCost(summaryCost);
+    }
+    function setChangeAdvertisementListeners() {
+        getAdvertisements().forEach(advertisement => {
+            getPfCount(advertisement).addEventListener("change", updateCosts);
+            getStartDate(advertisement).addEventListener("change", updateCosts);
+            getEndDate(advertisement).addEventListener("change", updateCosts);
+            getRemoveAdvertisementButton(advertisement).addEventListener('click', function (event) {
+                advertisement.remove();
+                updateCosts();
+            });
+        });
+    }
+    function addAdvertisement() {
+        var currentDate = getCurrentDate();
+        var tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><label><input type="text" placeholder="ссылка"></label></td>
+            <td><label><input type="number" value="1"></label></td>
+            <td><label><input type="date" value="${currentDate}"></label></td>
+            <td><label><input type="date" value="${currentDate}"></label></td>
+            <td><label><input type="number" readonly></label></td>
+            <td><label><input type="number" readonly></label></td>
+            <td><label><input type="checkbox" checked></label></td>
+            <td><button>убрать объявление</button></td>
+            `;
+        document.querySelector("tbody").insertBefore(tr, Array.from(document.querySelectorAll("tr")).pop());
+        setChangeAdvertisementListeners();
+        updateCosts();
+    }
+</script>
+<script>
+    // query
+    function createOrderDto() {
+        let body = {
+            id: getOrderId(),
+            name: getOrderName(),
+            advertisements: []
+        };
+        getAdvertisements().forEach(advertisement => {
+            body.advertisements.push({
+                link: getLink(advertisement).value,
+                productFactorCountPerDay: getPfCount(advertisement).value,
+                promotionStartDate: getStartDate(advertisement).value,
+                promotionEndDate: getEndDate(advertisement).value,
+                promoteContacts: getPromoteContacts(advertisement).checked
+            });
+        });
+        return body;
+    }
+    function save(body) {
+        fetch(window.location.origin + "/order/save", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getToken()
+            },
+            body: JSON.stringify(body)
+        })
+    }
+    function download() {
+        document.getElementById('downloadLink').click();
+    }
+</script>
+<script>
+    // listeners
+    document.querySelector('button.addAdvertisement').addEventListener('click', function (event) {addAdvertisement();});
+    document.querySelector('button.save').addEventListener('click', function (event) {save(createOrderDto());});
+    document.querySelector('button.download').addEventListener('click', function (event) {download();});
+</script>
+<script>
+    // execute
+    setChangeAdvertisementListeners();
+    updateCosts();
+</script>
 </body>
 </html>
