@@ -21,6 +21,8 @@
 
         <poi.version>5.3.0</poi.version>
         <junit.version>4.13.2</junit.version>
+        <flyway-core.version>10.15.2</flyway-core.version>
+        <spring-context.version>6.1.14</spring-context.version>
     </properties>
 
     <dependencies>
@@ -53,6 +55,15 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway-core.version}</version>
+        </dependency>
 
         <!-- Excel -->
         <dependency>
@@ -74,6 +85,16 @@
         </dependency>
     </dependencies>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring-context.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -81,6 +102,9 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <profiles>
+                        <profile>
+                            <id>develop</id>
+                        </profile>
                         <profile>
                             <id>production</id>
                         </profile>

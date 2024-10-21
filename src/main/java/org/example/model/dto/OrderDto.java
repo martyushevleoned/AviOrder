@@ -5,11 +5,12 @@ import org.example.model.entity.Order;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * ДТО для страницы редактирования заказа
  */
-public record OrderDto(long id, String name, List<AdvertisementDto> advertisements) {
+public record OrderDto(UUID id, String name, List<AdvertisementDto> advertisements) {
 
     public static OrderDto createByOrder(Order order) {
         List<AdvertisementDto> advertisementsDto = order.getAdvertisements().stream().map(advertisement ->

@@ -49,20 +49,14 @@ public class OrderService {
     /**
      * @return {@link Order#getId() orderId}
      */
-    public long createOrder(UserDetails userDetails) {
-
-        long uuid;
-        do {
-            uuid = UUID.randomUUID().getLeastSignificantBits() & Long.MAX_VALUE;
-        } while (orderRepository.existsById(uuid));
+    public UUID createOrder(UserDetails userDetails) {
 
         Order order = new Order();
-        order.setId(uuid);
-        order.setName(String.format("Заказ №%s", uuid));
+        order.setName("Новый заказ");
         order.setUser(findUser(userDetails));
-        orderRepository.save(order);
+        order = orderRepository.save(order);
 
-        return uuid;
+        return order.getId();
     }
 
     public List<ProfileOrderDto> getOrdersList(UserDetails userDetails) {
@@ -73,11 +67,11 @@ public class OrderService {
                 .toList();
     }
 
-    public void deleteOrder(long orderId) {
+    public void deleteOrder(UUID orderId) {
         orderRepository.deleteById(orderId);
     }
 
-    public OrderDto getOrderDto(long orderId) {
+    public OrderDto getOrderDto(UUID orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException("Заказ не найден"));
         return OrderDto.createByOrder(order);
     }
@@ -92,7 +86,7 @@ public class OrderService {
         advertisementRepository.saveAll(orderDto.getAdvertisements());
     }
 
-    public Resource generateOrderExcelDocument(long orderId) {
+    public Resource generateOrderExcelDocument(UUID orderId) {
 
         OrderDto orderDto = getOrderDto(orderId);
 

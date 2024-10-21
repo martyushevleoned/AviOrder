@@ -1,32 +1,38 @@
-package org.example.service;
+package org.example.config;
 
 import jakarta.annotation.PostConstruct;
 import org.example.model.entity.Role;
 import org.example.model.entity.User;
 import org.example.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-// TODO Разобраться с миграциями
-@Service
-public class RebootService {
+@Configuration
+@Profile("develop")
+public class TestDataConfig {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final boolean init;
 
     @Autowired
-    public RebootService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public TestDataConfig(UserRepository userRepository, PasswordEncoder passwordEncoder, @Value("${spring.jpa.hibernate.ddl-auto}") String init) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.init = init.equals("create");
     }
 
     @PostConstruct
-    private void createTestUsers() {
-        createUser("123","123", Set.of(Role.USER));
-        createUser("user","user", Set.of(Role.USER));
+    private void initTestUsers() {
+        if (!init)
+            return;
+        createUser("user", "user", Set.of(Role.USER));
+        createUser("admin", "admin", Set.of(Role.ADMIN));
     }
 
     private void createUser(String username, String password, Set<Role> roles) {

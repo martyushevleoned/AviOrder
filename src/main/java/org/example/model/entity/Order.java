@@ -5,12 +5,14 @@ import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity(name = "orders")
 public class Order {
 
     @Id
-    private long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(nullable = false)
     private String name;
@@ -27,11 +29,11 @@ public class Order {
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Advertisement> advertisements = new LinkedList<>();
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

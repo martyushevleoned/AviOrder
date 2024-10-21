@@ -14,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 /**
  * {@link Page#ORDER}
  */
@@ -33,7 +35,7 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public String order(
             @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable long orderId,
+            @PathVariable UUID orderId,
             Model model
     ) {
         accessService.access(userDetails, orderId);
@@ -53,14 +55,14 @@ public class OrderController {
 
     @GetMapping("/create")
     public String createOrder(@AuthenticationPrincipal UserDetails userDetails) {
-        long orderId = orderService.createOrder(userDetails);
+        UUID orderId = orderService.createOrder(userDetails);
         return "redirect:" + Page.ORDER.getParamUrl(orderId);
     }
 
     @PostMapping("/delete")
     public String deleteOrder(
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestParam long orderId
+            @RequestParam UUID orderId
     ) {
         accessService.access(userDetails, orderId);
         orderService.deleteOrder(orderId);
@@ -69,7 +71,7 @@ public class OrderController {
 
     @GetMapping("/download/{id}")
     @ResponseBody
-    public ResponseEntity<Resource> downloadExcel(@PathVariable long id) {
+    public ResponseEntity<Resource> downloadExcel(@PathVariable UUID id) {
 
         Resource resource = orderService.generateOrderExcelDocument(id);
         String resourceName = String.format("order-%s.xlsx", id);

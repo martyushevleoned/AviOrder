@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class AccessService {
@@ -18,7 +19,7 @@ public class AccessService {
         this.orderRepository = orderRepository;
     }
 
-    public void access(UserDetails userDetails, long orderId) {
+    public void access(UserDetails userDetails, UUID orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(String.format("Заказ (id=%s) не существует", orderId)));
         if (!Objects.equals(order.getUser().getUsername(), userDetails.getUsername()))
