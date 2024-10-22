@@ -32,7 +32,9 @@ public class TestDataConfig {
         if (!init)
             return;
         createUser("user", "user", Set.of(Role.USER));
+        createUser("employee", "employee", Set.of(Role.EMPLOYEE));
         createUser("admin", "admin", Set.of(Role.ADMIN));
+        createUser("superuser", "superuser", Set.of(Role.USER, Role.EMPLOYEE, Role.ADMIN));
     }
 
     private void createUser(String username, String password, Set<Role> roles) {

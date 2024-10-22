@@ -7,7 +7,8 @@ public enum Page implements Url {
     REGISTRATION("/registration", "registration"),
     PROFILE("/profile", "profile"),
     ORDER("/order", "order"),
-    ADMIN("/admin", "admin");
+    ADMIN("/admin", "admin"),
+    EMPLOYEE("/employee", "employee");
 
     private final String url;
     private final String template;

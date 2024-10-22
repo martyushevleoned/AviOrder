@@ -10,6 +10,7 @@
 <div><h3>Домашняя страница</h3></div>
 <div sec:authorize="isAnonymous()"><h3>Авторизуйтесь для получения полного функционала сервиса <a th:href="@{/login}">(тык)</a></h3></div>
 <div sec:authorize="hasAuthority('ADMIN')"><h3>Открыть <a th:href="@{/admin}">админскую страницу</a></h3></div>
-<div sec:authorize="hasAuthority('USER')"><h3>Вы авторизованы <a th:href="@{/profile}">(личный кабинет)</a></h3></div>
+<div sec:authorize="hasAuthority('EMPLOYEE')"><h3>Открыть <a th:href="@{/employee}">страницу сотрудника</a></h3></div>
+<div sec:authorize="hasAuthority('USER')"><h3>Открыть <a th:href="@{/profile}">личный кабинет пользователя</a></h3></div>
 </body>
 </html>

@@ -23,6 +23,9 @@ public class AccessService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(String.format("Заказ (id=%s) не существует", orderId)));
         if (!Objects.equals(order.getUser().getUsername(), userDetails.getUsername()))
-            throw new AccessDeniedException(String.format("Пользователь %s не имеет прав на изменения заказа (id=%s)",userDetails.getUsername(),order));
+            throw new AccessDeniedException(String.format(
+                    "Пользователь %s не имеет прав на изменения заказа (id=%s)",
+                    userDetails.getUsername(),
+                    order.getId()));
     }
 }

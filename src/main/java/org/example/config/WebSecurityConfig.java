@@ -40,6 +40,8 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.GET, Page.PROFILE.getUrl()).hasAuthority(Role.USER.getAuthority())
                         .requestMatchers(HttpMethod.GET, Page.ORDER.getAnyParamUrl()).hasAuthority(Role.USER.getAuthority())
                         .requestMatchers(HttpMethod.POST, Page.ORDER.getAnyParamUrl()).hasAuthority(Role.USER.getAuthority())
+                        // employee
+                        .requestMatchers(HttpMethod.GET, Page.EMPLOYEE.getUrl()).hasAuthority(Role.EMPLOYEE.getAuthority())
                         // admin
                         .requestMatchers(HttpMethod.GET, Page.ADMIN.getUrl()).hasAuthority(Role.ADMIN.getAuthority())
                 )

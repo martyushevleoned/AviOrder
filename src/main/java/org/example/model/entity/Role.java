@@ -14,7 +14,7 @@ public enum Role implements GrantedAuthority {
      * Сотрудник.
      * Имеет доступ к редактированию любых заказов, а не только собственных.
      */
-    WORKER,
+    EMPLOYEE,
 
     /**
      * Админ.

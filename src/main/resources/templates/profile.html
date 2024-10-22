@@ -8,6 +8,7 @@
 </head>
 <body>
 <div><h3>Личный кабинет</h3></div>
+<div th:insert="~{fragments/general.html :: logout}"></div>
 <div><h3>Создать заказ <a th:href="@{/order/create}">(тык)</a></h3></div>
 <div><h3>Список заказов:</h3></div>
 <ul>
